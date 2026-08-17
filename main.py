@@ -1,7 +1,13 @@
 import pygame
+import entities.player as player
+import entities.building as building
+
 
 # 1. Initialize all imported pygame modules
 pygame.init()
+
+# Create a player
+player = player.Player("My City", 1000)
 
 # 2. Set up the drawing window (Width, Height)
 screen = pygame.display.set_mode((1280, 720))
@@ -10,8 +16,6 @@ running = True
 
 #force cursor to be visible
 pygame.mouse.set_visible(True)
-
-boxes = []
 
 # 3. Main Game Loop
 while running:
@@ -23,8 +27,8 @@ while running:
             if event.button == 1:
                 x,y = event.pos
 
-                box = pygame.Rect(x, y, 50, 50)
-                boxes.append(box)
+                box = building.Building("Box", 100, "blue", 10, x, y)
+                player.add_building(box)
 
 
     # Fill the screen with a solid color (clears the last frame)
@@ -32,9 +36,11 @@ while running:
 
     # Render game elements here
 
-    for box in boxes:
-        pygame.draw.rect(screen, "blue", box)
-        
+    for box in player.buildings:
+        pygame.draw.rect(screen, box.color, pygame.Rect(box.x, box.y, 50, 50))
+        player.add_money(box.production / 60)  # Add production income to the player's money
+
+    print(player)  # Print the player's money to the console for debugging   
     # Update the display to show your changes
     pygame.display.flip()
 
